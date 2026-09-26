@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AC Municipal 2027 - Secretaria Política & Calendari</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @keyframes pulse-record {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.15); }
+    }
+    .animate-recording {
+      animation: pulse-record 1.5s infinite ease-in-out;
+    }
+    /* Estils personalitzats per a la barra de desplaçament */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen font-sans flex flex-col md:flex-row">
+
+  <!-- ========================================================================= -->
+  <!-- SIDEBAR LATERAL                                                           -->
+  <!-- ========================================================================= -->
+  <aside id="sidebar" class="w-full md:w-72 bg-slate-900 text-slate-200 flex flex-col justify-between shrink-0 border-r border-slate-800 transition-all z-40">
+    
+    <!-- Capçalera Sidebar -->
+    <div>
+      <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center font-black text-white text-lg shadow-md border border-blue-400/30">
+            AC
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-blue-400">Aliança Catalana</div>
+            <div class="text-sm font-extrabold text-white leading-tight">Secretaria Municipal</div>
+          </div>
+        </div>
+        <button onclick="toggleMobileSidebar()" class="md:hidden text-slate-400 hover:text-white p-1">
+          ✕
+        </button>
+      </div>
+
+      <!-- Comptador Electoral -->
+      <div class="mx-4 my-4 p-3 bg-slate-800/80 rounded-xl border border-slate-700/60">
+        <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Objectiu: Municipals 2027</div>
+        <div class="text-sm font-black text-amber-400 mt-0.5">4rt Diumenge Maig 2027</div>
+        <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Fase 1: Programa & Executiva</span>
+        </div>
+      </div>
+
+      <!-- Menú de Navegació Sidebar -->
+      <nav class="px-3 space-y-1.5 text-xs font-semibold">
+        
+        <!-- NOU: PESTANYA CALENDARI I CONVOCATÒRIES -->
+        <button onclick="switchTab('tab-calendari')" id="nav-btn-tab-calendari" class="nav-item w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition text-white bg-blue-700 shadow-sm font-bold">
+          <div class="flex items-center gap-3">
+            <span class="text-base">📅</span>
+            <span>Calendari & Convocatòries</span>
+          </div>
+          <span id="sidebar-events-badge" class="bg-blue-900/80 text-blue-200 text-[10px] px-2 py-0.5 rounded-full font-bold">3</span>
+        </button>
+
+        <!-- ORDRE DEL DIA -->
+        <button onclick="switchTab('tab-ordre')" id="nav-btn-tab-ordre" class="nav-item w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800">
+          <div class="flex items-center gap-3">
+            <span class="text-base">📋</span>
+            <span>Ordre del Dia Setmanal</span>
+          </div>
+          <span id="sidebar-agenda-badge" class="bg-slate-800 text-slate-400 text-[10px] px-2 py-0.5 rounded-full">4 punts</span>
+        </button>
+
+        <!-- GRAVACIÓ I ÀUDIO -->
+        <button onclick="switchTab('tab-audio')" id="nav-btn-tab-audio" class="nav-item w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800">
+          <div class="flex items-center gap-3">
+            <span class="text-base">🎙️</span>
+            <span>Gravació & Transcripció</span>
+          </div>
+          <span class="w-2 h-2 rounded-full bg-red-500"></span>
+        </button>
+
+        <!-- ACTA OFICIAL (BLINDATGE) -->
+        <button onclick="switchTab('tab-acta')" id="nav-btn-tab-acta" class="nav-item w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800">
+          <div class="flex items-center gap-3">
+            <span class="text-base">📜</span>
+            <span>Acta Oficial</span>
+          </div>
+          <span id="sidebar-acta-badge" class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30">Esborrany</span>
+        </button>
+
+        <!-- PLA DE 12 ÀREES -->
+        <button onclick="switchTab('tab-pla')" id="nav-btn-tab-pla" class="nav-item w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800">
+          <div class="flex items-center gap-3">
+            <span class="text-base">🗺️</span>
+            <span>Pla de 12 Àrees (6 Mesos)</span>
+          </div>
+        </button>
+
+        <!-- DIRECTORI DE CONTACTES -->
+        <button onclick="switchTab('tab-contactes')" id="nav-btn-tab-contactes" class="nav-item w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition text-slate-400 hover:text-white hover:bg-slate-800">
+          <div class="flex items-center gap-3">
+            <span class="text-base">👥</span>
+            <span>Contactes d'Executiva</span>
+          </div>
+          <span id="sidebar-contacts-count" class="bg-slate-800 text-slate-400 text-[10px] px-2 py-0.5 rounded-full">5</span>
+        </button>
+
+      </nav>
+    </div>
+
+    <!-- Peu Sidebar: Usuari / Rol -->
+    <div class="p-4 border-t border-slate-800 bg-slate-950/60">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-xs text-white">
+          SP
+        </div>
+        <div class="overflow-hidden">
+          <div class="text-xs font-bold text-white truncate">Secretaria Política AC</div>
+          <div class="text-[10px] text-slate-400 truncate">Usuari actiu · Permís d'Acta</div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ========================================================================= -->
+  <!-- CONTINGUT PRINCIPAL                                                       -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 flex flex-col h-screen overflow-y-auto">
+
+    <!-- Topbar superior mòbil & títol -->
+    <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+      <div class="flex items-center gap-3">
+        <button onclick="toggleMobileSidebar()" class="md:hidden text-slate-600 hover:text-slate-900 p-2 rounded-lg bg-slate-100">
+          ☰
+        </button>
+        <div>
+          <h1 id="page-header-title" class="text-lg md:text-xl font-black text-slate-900">Calendari de Reunions & Convocatòria Automàtica</h1>
+          <p id="page-header-sub" class="text-xs text-slate-500">Programa reunions, introdueix correus i telèfons, i convoca automàticament per WhatsApp i Email.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200 text-xs font-semibold">
+          <span class="w-2 h-2 rounded-full bg-blue-600"></span> AC Municipals 2027
+        </span>
+      </div>
+    </header>
+
+    <div class="p-4 md:p-8 space-y-6 max-w-6xl w-full mx-auto">
+
+      <!-- ===================================================================== -->
+      <!-- PESTANYA: CALENDARI I CONVOCATÒRIES (NOVA SECCIÓ SOL·LICITADA)        -->
+      <!-- ===================================================================== -->
+      <section id="tab-calendari" class="tab-content space-y-6">
+        
+        <!-- Targeta d'Accions Ràpides de Calendari -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <span>Agendament de Reunions i Convocatòries</span>
+              <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600" id="total-events-count">3 esdeveniments</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">Crea noves sessions, convoca a tots els membres automàticament i exporta a calendari.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="openAddEventModal()" class="bg-blue-900 hover:bg-blue-950 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition flex items-center gap-2">
+              <span>➕</span> Agendar Nova Reunió
+            </button>
+            <button onclick="switchTab('tab-contactes')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-2.5 rounded-xl transition flex items-center gap-1.5">
+              <span>👥</span> Llista de Contactes
+            </button>
+          </div>
+        </div>
+
+        <!-- Graella Principal: Calendari / Reunions Agendades -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          <!-- Columna Esquerra (2 cols): Llista de Reunions Agendades -->
+          <div class="lg:col-span-2 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <span>📌 Properes Reunions Programades</span>
+              </h3>
+              <div class="flex items-center gap-1 text-xs">
+                <span class="text-slate-400">Filtrar:</span>
+                <select id="filter-event-type" onchange="renderEvents()" class="text-xs border border-slate-200 rounded-lg p-1 bg-white font-medium">
+                  <option value="all">Totes</option>
+                  <option value="executiva">Executiva Local</option>
+                  <option value="programa">Programa Electoral</option>
+                  <option value="ple">Ple Municipal</option>
+                  <option value="carrer">Carpa / Carrer</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Contenidor d'esdeveniments -->
+            <div id="events-list-container" class="space-y-3">
+              <!-- Renderitzat per JS -->
+            </div>
+          </div>
+
+          <!-- Columna Dreta (1 col): Panell de Convocatòria Ràpida i Contactes -->
+          <div class="space-y-5">
+            
+            <!-- Panell de Convocatòria Ràpida -->
+            <div class="bg-gradient-to-br from-blue-950 via-slate-900 to-blue-900 text-white p-5 rounded-2xl shadow-sm border border-blue-800/40">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-blue-300 bg-blue-500/20 px-2 py-0.5 rounded-md border border-blue-400/30">Auto-Convocatòria</span>
+                <span class="text-xs">⚡ 1-Clic</span>
+              </div>
+              <h4 class="text-sm font-bold text-white mb-1">Convocar la Propera Reunió</h4>
+              <p class="text-xs text-blue-200/80 mb-4 leading-relaxed">
+                Genera el text institucional oficial i envia la convocatòria a tots els membres de l'executiva per Email i WhatsApp alhora.
+              </p>
+
+              <div class="bg-slate-900/80 p-3 rounded-xl border border-white/10 text-xs mb-4 space-y-1">
+                <div class="text-slate-400 text-[10px] uppercase font-bold">Propera sessió seleccionada:</div>
+                <div class="font-bold text-amber-300 truncate" id="quick-convoke-title">Reunió Executiva #15 - Programa & Ple</div>
+                <div class="text-[11px] text-slate-300" id="quick-convoke-datetime">📅 3 d'Octubre de 2026 a les 19:30 h</div>
+                <div class="text-[11px] text-slate-400" id="quick-convoke-place">📍 Seu Local / Despatx Municipal</div>
+              </div>
+
+              <div class="space-y-2">
+                <button onclick="launchAutoConvocation('email')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition">
+                  <span>✉️</span> Convocar Tots per Correu (Email)
+                </button>
+                <button onclick="launchAutoConvocation('whatsapp')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition">
+                  <span>💬</span> Convocar per WhatsApp (Grup / Difusió)
+                </button>
+                <button onclick="downloadICSInvite()" class="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition">
+                  <span>📅</span> Descarregar Invitació .ICS (Google/Outlook)
+                </button>
+                <button onclick="copyConvocationText()" class="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition">
+                  <span>📋</span> Copiar Text de la Convocatòria
+                </button>
+              </div>
+            </div>
+
+            <!-- Resum de Destinataris Receptors -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wide">Membres a Convocar</h4>
+                <a href="javascript:void(0)" onclick="switchTab('tab-contactes')" class="text-xs text-blue-600 font-semibold hover:underline">Gestionar</a>
+              </div>
+              <div id="quick-recipients-preview" class="space-y-2 text-xs">
+                <!-- Renderitzat per JS -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===================================================================== -->
+      <!-- PESTANYA: CONTACTES D'EXECUTIVA (MAILS I TELÈFONS)                     -->
+      <!-- ===================================================================== -->
+      <section id="tab-contactes" class="tab-content hidden space-y-6">
+        
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <span>Directori de l'Executiva Local (Receptors de Convocatòries)</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">Introdueix i actualitza els correus i telèfons per a l'enviament automàtic de convocatòries.</p>
+          </div>
+          <button onclick="openAddContactModal()" class="bg-blue-900 hover:bg-blue-950 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition flex items-center gap-1.5 self-start sm:self-auto">
+            <span>➕</span> Afegir Nou Membre
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 uppercase font-bold">
+                <tr>
+                  <th class="p-3.5">Nom i Cognoms</th>
+                  <th class="p-3.5">Càrrec a l'Executiva</th>
+                  <th class="p-3.5">Correu Electrònic</th>
+                  <th class="p-3.5">Telèfon (WhatsApp)</th>
+                  <th class="p-3.5 text-center">Estat Convocatòria</th>
+                  <th class="p-3.5 text-right">Accions</th>
+                </tr>
+              </thead>
+              <tbody id="contacts-table-body" class="divide-y divide-slate-100">
+                <!-- Renderitzat per JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ===================================================================== -->
+      <!-- PESTANYA: ORDRE DEL DIA DE LA REUNIÓ                                  -->
+      <!-- ===================================================================== -->
+      <section id="tab-ordre" class="tab-content hidden space-y-5">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <span>Ordre del Dia de la Reunió Setmanal</span>
+              <span class="text-xs bg-slate-100 text-slate-600 font-semibold px-2.5 py-0.5 rounded-full border border-slate-200" id="total-time-badge">Temps total: 110 min</span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">Estructura 50/25/25: Programa (50 min), Executiva & Xarxes (25 min), Ple & Dia a Dia (25 min).</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="openAddPointModal()" class="bg-blue-900 hover:bg-blue-950 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl shadow-sm transition flex items-center gap-1.5">
+              <span>➕</span> Afegir Punt a l'Ordre
+            </button>
+            <button onclick="resetDefaultAgenda()" class="text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 text-xs font-semibold px-3 py-2.5 rounded-xl transition">
+              🔄 Plantilla Estàndard
+            </button>
+          </div>
+        </div>
+
+        <div id="agenda-points-list" class="space-y-3">
+          <!-- Renderitzat per JS -->
+        </div>
+      </section>
+
+
+      <!-- ===================================================================== -->
+      <!-- PESTANYA: GRAVACIÓ I PUJADA D'ÀUDIO                                   -->
+      <!-- ===================================================================== -->
+      <section id="tab-audio" class="tab-content hidden space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Canal 1: Gravació en directe -->
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">Canal 1</span>
+                <span id="recording-status-badge" class="text-xs font-medium text-slate-400 bg-slate-100 px-2.5 py-1 rounded-md">Inactiu</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-1">Gravació en Directe de la Reunió</h3>
+              <p class="text-xs text-slate-500 mb-6">Registra la veu directament a través del micròfon del dispositiu.</p>
+              
+              <div class="flex flex-col items-center justify-center p-6 bg-slate-50 rounded-xl border border-slate-200/80 mb-6">
+                <div id="mic-indicator" class="w-16 h-16 rounded-full bg-slate-200 flex items-center justify-center text-2xl text-slate-500 transition-all">
+                  🎙️
+                </div>
+                <div id="recording-timer" class="text-2xl font-mono font-bold text-slate-700 mt-3">00:00:00</div>
+                <p id="mic-subtext" class="text-[11px] text-slate-400 mt-1">Llest per començar a gravar</p>
+              </div>
+            </div>
+
+            <div class="flex gap-2">
+              <button id="btn-start-record" onclick="toggleRecording()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition">
+                <span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span> Començar a Gravar
+              </button>
+              <button id="btn-stop-record" onclick="stopRecording()" disabled class="bg-slate-200 text-slate-400 font-semibold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-not-allowed">
+                ⏹️ Aturar
+              </button>
+            </div>
+          </div>
+
+          <!-- Canal 2: Pujada de fitxer d'àudio -->
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-purple-600 bg-purple-50 px-2.5 py-1 rounded-md">Canal 2</span>
+                <span class="text-xs font-medium text-slate-500">MP3, M4A, WAV, OGG</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-1">Pujar Fitxer d'Àudio Extern</h3>
+              <p class="text-xs text-slate-500 mb-6">Si s'ha gravat la reunió amb una gravadora externa o mòbil, puja el fitxer aquí.</p>
+
+              <div id="drop-zone" class="border-2 border-dashed border-slate-300 hover:border-blue-500 bg-slate-50 hover:bg-blue-50/40 rounded-xl p-8 text-center transition cursor-pointer flex flex-col items-center justify-center" onclick="document.getElementById('audio-file-input').click()">
+                <input type="file" id="audio-file-input" accept="audio/*" class="hidden" onchange="handleAudioUpload(event)">
+                <div class="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center text-xl text-blue-600 mb-2 border border-slate-200">
+                  📁
+                </div>
+                <p class="text-xs font-semibold text-slate-700">Fes clic o arrossega el fitxer d'àudio aquí</p>
+                <p class="text-[11px] text-slate-400 mt-1">Mida recomanada fins a 200MB</p>
+              </div>
+
+              <div id="uploaded-file-info" class="hidden mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 flex items-center justify-between">
+                <div class="flex items-center gap-2 overflow-hidden">
+                  <span>🎵</span>
+                  <span id="uploaded-filename" class="font-medium truncate max-w-[200px]">audio_reunio.mp3</span>
+                </div>
+                <span id="uploaded-filesize" class="text-blue-600 text-[11px]">12.4 MB</span>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <button onclick="startTranscription()" id="btn-transcribe" class="w-full bg-blue-900 hover:bg-blue-950 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition">
+                <span>⚡</span> Transcriure i Generar Esborrany d'Acta
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <div id="transcription-loading" class="hidden bg-white p-5 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <div class="inline-block animate-spin text-2xl mb-2">⚙️</div>
+          <h4 class="text-sm font-bold text-slate-800">Processant l'àudio en català amb IA...</h4>
+          <p class="text-xs text-slate-500 mt-0.5">Identificant veus, estructurant intervencions i redactant els acords i tasques assignades.</p>
+          <div class="w-full bg-slate-100 rounded-full h-2 mt-4 max-w-md mx-auto overflow-hidden">
+            <div id="transcription-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 15%"></div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ===================================================================== -->
+      <!-- PESTANYA: ACTA OFICIAL (BLINDATGE IMMUTABLE)                          -->
+      <!-- ===================================================================== -->
+      <section id="tab-acta" class="tab-content hidden space-y-6">
+        
+        <!-- Estat de l'acta -->
+        <div id="acta-status-banner" class="p-4 rounded-2xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 bg-amber-50 border-amber-200 text-amber-900">
+          <div class="flex items-center gap-3">
+            <div id="status-icon" class="text-2xl">📝</div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span id="status-title" class="font-bold text-sm">Estat: Esborrany en Fase d'Edició</span>
+                <span id="status-tag" class="text-[10px] bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full font-bold uppercase">Editable</span>
+              </div>
+              <p id="status-desc" class="text-xs text-amber-800/80 mt-0.5">
+                Modifica el text lliurement. Quan estigui revisada, tanca-la per blindar-la de forma irreversible.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="btn-save-draft" onclick="saveDraft()" class="bg-white border border-amber-300 text-amber-900 hover:bg-amber-100/50 text-xs font-semibold px-3.5 py-2 rounded-xl transition">
+              💾 Guardar Esborrany
+            </button>
+            <button id="btn-lock-acta" onclick="confirmLockActa()" class="bg-red-700 hover:bg-red-800 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5">
+              <span>🔒</span> TANCAR I BLINDAR ACTA
+            </button>
+          </div>
+        </div>
+
+        <!-- Segell de Certificació -->
+        <div id="certificate-seal" class="hidden bg-emerald-950 text-emerald-100 p-4 rounded-2xl border border-emerald-700 shadow-md">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-xl">🛡️</span>
+              <div>
+                <div class="text-xs font-bold text-emerald-300 uppercase tracking-wider">Acta Oficial Certificada i Tancada</div>
+                <div class="text-[11px] text-emerald-200/80 font-mono" id="seal-hash">HASH: AC-CAT-2026-09-26-9B4E1F8C</div>
+              </div>
+            </div>
+            <div class="text-right text-[11px] text-emerald-300/80">
+              <div>Signat: Secretari d'Organització AC</div>
+              <div id="seal-timestamp">Data de tancament: 26/09/2026 19:30 h</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contingut de l'acta -->
+        <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pb-6 border-b border-slate-200">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Títol de la Sessió</label>
+              <input type="text" id="acta-title" value="Reunió Executiva Local #14 - Programa & Ple" class="acta-input w-full text-xs font-semibold text-slate-900 border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Data i Hora</label>
+              <input type="text" id="acta-date" value="26 de Setembre de 2026 - 19:30 h" class="acta-input w-full text-xs text-slate-900 border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Assistents i Càrrecs</label>
+              <input type="text" id="acta-attendees" value="Cap de llista, Secretari d'Organització, Resp. Comunicació, Resp. Programa" class="acta-input w-full text-xs text-slate-900 border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <h4 class="text-xs font-extrabold text-blue-900 uppercase tracking-wide flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span> 1. Programa Electoral: Àrea Treballada i Propostes
+            </h4>
+            <textarea id="acta-programa" rows="3" class="acta-input w-full text-xs text-slate-700 border border-slate-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none leading-relaxed">S'analitza la partida de Seguretat Ciutadana. Es constaten 4 places vacants de Policia Local sense cobrir.
+Propostes AC aprovades:
+1. Convocatòria de places per garantir patrullatge 24/7 a peu a tots els barris.
+2. Unitat de resposta ràpida contra l'ocupació il·legal i la reincidència delictiva.
+3. Instal·lació de càmeres de lectura de matrícules a les entrades del municipi.</textarea>
+          </div>
+
+          <div class="space-y-2">
+            <h4 class="text-xs font-extrabold text-purple-900 uppercase tracking-wide flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span> 2. Treball d'Executiva: Xarxes, Vídeos i Creixement
+            </h4>
+            <textarea id="acta-executiva" rows="3" class="acta-input w-full text-xs text-slate-700 border border-slate-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none leading-relaxed">Pla de vídeos: Gravació de 2 reels a peu de carrer sobre la manca d'enllumenat i la taxa d'escombraries.
+Creixement d'afiliats: Es confirmen 5 noves altes. Parada informativa el proper dissabte de 10h a 13h a la plaça major.</textarea>
+          </div>
+
+          <div class="space-y-2">
+            <h4 class="text-xs font-extrabold text-amber-900 uppercase tracking-wide flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-600"></span> 3. Dia a Dia: Fiscalització i Proper Ple Municipal
+            </h4>
+            <textarea id="acta-plenary" rows="3" class="acta-input w-full text-xs text-slate-700 border border-slate-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none leading-relaxed">Ordre del dia del Ple: Vot en contra de la modificació de crèdit per sobrecostos injustificats.
+Presentació de 2 precs urgents sobre neteja i seguretat ciutadana. Intervenció enregistrada per a xarxes.</textarea>
+          </div>
+
+          <div class="space-y-2">
+            <h4 class="text-xs font-extrabold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-700"></span> 4. Acords Executius i Tasques Assignades
+            </h4>
+            <textarea id="acta-tasks" rows="3" class="acta-input w-full text-xs text-slate-700 border border-slate-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none leading-relaxed">1. [Resp. Comunicació] Edició i publicació del vídeo de carrer abans de divendres a les 19h.
+2. [Secretari Organització] Permisos municipals per a la parada de dissabte.
+3. [Cap de Llista] Redacció definitiva de les preguntes per al registre municipal.</textarea>
+          </div>
+
+          <div class="pt-4 border-t border-slate-150 flex items-center justify-between">
+            <div class="text-xs text-slate-400">Document oficial d'Aliança Catalana.</div>
+            <button onclick="window.print()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-xl transition flex items-center gap-1.5">
+              🖨️ Imprimir / Exportar a PDF
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ===================================================================== -->
+      <!-- PESTANYA: PLA DE 12 ÀREES (6 MESOS)                                   -->
+      <!-- ===================================================================== -->
+      <section id="tab-pla" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <h3 class="text-base font-bold text-slate-900 mb-1">Calendari d'Sprints Programàtics: Octubre 2026 – Març 2027</h3>
+          <p class="text-xs text-slate-500 mb-6">Mètode Bisetmanal: 12 àrees claus cobertes en profunditat analitzant el pressupost municipal real.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="areas-grid">
+            <!-- Generat per JS -->
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODALS DE GESTIÓ                                                          -->
+  <!-- ========================================================================= -->
+
+  <!-- MODAL: AGENDAR / EDITAR REUNIÓ -->
+  <div id="modal-event" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-sm font-bold text-slate-900" id="modal-event-title">Agendar Nova Reunió</h3>
+        <button onclick="closeEventModal()" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+      </div>
+      <div class="space-y-3">
+        <input type="hidden" id="event-edit-id" value="-1">
+        
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Títol de la Reunió o Acte</label>
+          <input type="text" id="event-title" placeholder="Ex: Reunió Executiva #16 - Programa Turisme & Ple" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Tipus d'Esdeveniment</label>
+            <select id="event-type" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <option value="executiva">Executiva Local</option>
+              <option value="programa">Sessió de Programa</option>
+              <option value="ple">Ple Municipal</option>
+              <option value="carrer">Carpa / Acte de Carrer</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Lloc / Ubicació</label>
+            <input type="text" id="event-location" placeholder="Ex: Seu Local / Plaça Major" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Data</label>
+            <input type="date" id="event-date" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Hora d'Inici</label>
+            <input type="time" id="event-time" value="19:30" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Ordre del Dia o Punts Clau</label>
+          <textarea id="event-desc" rows="3" placeholder="1. Anàlisi pressupostària...&#10;2. Vídeos i xarxes...&#10;3. Ple municipal..." class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Membres Convocats</label>
+          <p class="text-[11px] text-slate-400 mb-2">Es convocaran automàticament tots els membres actius del directori de l'executiva.</p>
+          <div id="event-attendees-checkboxes" class="grid grid-cols-2 gap-2 text-xs">
+            <!-- Checkboxes generats per JS -->
+          </div>
+        </div>
+
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+        <button onclick="closeEventModal()" class="px-3.5 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded-lg">Cancel·lar</button>
+        <button onclick="saveEvent()" class="px-4 py-2 text-xs font-bold bg-blue-900 hover:bg-blue-950 text-white rounded-xl shadow-sm">Guardar Reunió</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL: AFEGIR/EDITAR CONTACTE (MAIL I TELÈFON) -->
+  <div id="modal-contact" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-sm font-bold text-slate-900" id="modal-contact-title">Afegir Membre d'Executiva</h3>
+        <button onclick="closeContactModal()" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+      </div>
+      <div class="space-y-3">
+        <input type="hidden" id="contact-edit-id" value="-1">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Nom i Cognoms</label>
+          <input type="text" id="contact-name" placeholder="Ex: Martí Puig" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Càrrec a la Candidatura</label>
+          <input type="text" id="contact-role" placeholder="Ex: Cap de llista / Resp. Comunicació" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Correu Electrònic</label>
+          <input type="email" id="contact-email" placeholder="correu@aliancacatalana.cat" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Telèfon (WhatsApp)</label>
+          <input type="tel" id="contact-phone" placeholder="+34 600 000 000" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+        <button onclick="closeContactModal()" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg">Cancel·lar</button>
+        <button onclick="saveContact()" class="px-4 py-1.5 text-xs font-bold bg-blue-900 hover:bg-blue-950 text-white rounded-xl shadow-sm">Guardar Membre</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL: AFEGIR/EDITAR PUNT A L'ORDRE DEL DIA -->
+  <div id="modal-point" class="fixed inset-0 bg-slate-950/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-sm font-bold text-slate-900" id="modal-title">Afegir Punt a l'Ordre del Dia</h3>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+      </div>
+      <div class="space-y-3">
+        <input type="hidden" id="edit-index" value="-1">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Títol del Tema o Assumpte</label>
+          <input type="text" id="point-title" placeholder="Ex: Radiografia pressupostària de Neteja i Residus" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Eix Estratègic</label>
+          <select id="point-category" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <option value="programa">🔵 1. Programa Electoral</option>
+            <option value="executiva">🟣 2. Executiva, Xarxes i Militància</option>
+            <option value="ple">🟠 3. Dia a Dia i Ple Municipal</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Responsable</label>
+            <input type="text" id="point-owner" placeholder="Ex: Cap de llista / Resp. Xarxes" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Temps Estimat (min)</label>
+            <input type="number" id="point-minutes" value="25" min="5" step="5" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+        <button onclick="closeModal()" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg">Cancel·lar</button>
+        <button onclick="savePoint()" class="px-4 py-1.5 text-xs font-bold bg-blue-900 hover:bg-blue-950 text-white rounded-xl shadow-sm">Desar Punt</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL: CONFIRMACIÓ DE BLINDATGE D'ACTA (ACCIÓ IRREVERSIBLE) -->
+  <div id="modal-lock" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-red-200 space-y-4">
+      <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-2xl mx-auto">
+        🔒
+      </div>
+      <div class="text-center">
+        <h3 class="text-base font-bold text-slate-900">Segellar i Blindar l'Acta Permanentment?</h3>
+        <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+          <strong>Atenció:</strong> Aquesta acció és <strong>completament irreversible</strong>. Un cop blindada, cap membre podrà editar ni alterar cap paràgraf, acord o tasca d'aquesta sessió. L'acta quedarà tancada oficialment amb segell criptogràfic.
+        </p>
+      </div>
+      <div class="flex items-center justify-center gap-3 pt-3">
+        <button onclick="closeLockModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Continuar Editant</button>
+        <button onclick="executeLockActa()" class="px-5 py-2 text-xs font-bold bg-red-700 hover:bg-red-800 text-white rounded-xl shadow-sm">Sí, Tancar i Blindar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICACIÓ TOAST -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl text-xs font-semibold z-50 hidden flex items-center gap-2 border border-slate-700">
+    <span id="toast-icon">✅</span>
+    <span id="toast-msg">Acció completada amb èxit</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC                                                          -->
+  <!-- ========================================================================= -->
+  <script>
+    // DADES DE CONTACTES D'EXECUTIVA (MAILS I TELÈFONS)
+    let contacts = [
+      { id: 1, name: "Joan Garriga (Exemple)", role: "Cap de Llista & Portaveu", email: "joan.candidat@aliancacatalana.cat", phone: "+34 611 223 344", active: true },
+      { id: 2, name: "Marta Soler (Exemple)", role: "Secretària d'Organització", email: "organitzacio.local@aliancacatalana.cat", phone: "+34 622 334 455", active: true },
+      { id: 3, name: "Oriol Roca (Exemple)", role: "Resp. Comunicació & Xarxes", email: "comunicacio.ac@gmail.com", phone: "+34 633 445 566", active: true },
+      { id: 4, name: "Laia Font (Exemple)", role: "Coordinadora de Programa", email: "programa.municipal@aliancacatalana.cat", phone: "+34 644 556 677", active: true },
+      { id: 5, name: "Carles Rovira (Exemple)", role: "Resp. d'Acció al Carrer", email: "carles.ac@outlook.com", phone: "+34 655 667 788", active: true }
+    ];
+
+    // DADES DE REUNIONS AGENDADES
+    let events = [
+      {
+        id: 1,
+        title: "Reunió Executiva #15 - Programa Seguretat & Preparació de Ple",
+        type: "executiva",
+        date: "2026-10-03",
+        time: "19:30",
+        location: "Seu Local d'Aliança Catalana",
+        desc: "1. Radiografia de despesa en seguretat i policia local.\n2. Pla de gravació de vídeos de denúncia a peu de carrer.\n3. Mocions i preguntes per al registre municipal del Ple.",
+        attendees: [1, 2, 3, 4, 5]
+      },
+      {
+        id: 2,
+        title: "Sessió Monogràfica de Programa: Neteja Viària i Residus",
+        type: "programa",
+        date: "2026-10-10",
+        time: "10:30",
+        location: "Despatx del Grup Municipal / Seu",
+        desc: "1. Anàlisi del contracte de recollida de residus i contenidors.\n2. Propostes de rebaixa de taxes i millora del servei.\n3. Selecció de les 4 mesures clau del programa.",
+        attendees: [1, 2, 4]
+      },
+      {
+        id: 3,
+        title: "Carpa Informativa i Taula Ciutadana d'AC",
+        type: "carrer",
+        date: "2026-10-17",
+        time: "10:00",
+        location: "Plaça de la Vila (Mercat Setmanal)",
+        desc: "Presència al carrer per recollir signatures i queixes veïnals sobre seguretat i incivisme. Acollida de nous simpatitzants.",
+        attendees: [1, 2, 3, 5]
+      }
+    ];
+
+    // DADES D'ORDRE DEL DIA
+    let agendaPoints = [
+      { id: 1, title: "1. Radiografia Pressupostària: Seguretat i Civisme", category: "programa", owner: "Cap de Llista / Resp. Programa", minutes: 45, done: true },
+      { id: 2, title: "2. Pla de Vídeos a Peu de Carrer (TikTok/Reels) i Carpa Informativa", category: "executiva", owner: "Resp. Comunicació i Xarxes", minutes: 25, done: false },
+      { id: 3, title: "3. Creixement d'Afiliats i Balanç de Reunions amb Entitats Locals", category: "executiva", owner: "Secretari d'Organització", minutes: 15, done: false },
+      { id: 4, title: "4. Fiscalització del Proper Ple: Expedients i Preguntes Urgents", category: "ple", owner: "Portaveu Municipal", minutes: 25, done: false }
+    ];
+
+    // 12 ÀREES MUNICIPALS
+    const areasData = [
+      { num: 1, mes: "Octubre (S1-S2)", titol: "Seguretat Ciutadana i Civisme", estat: "En Curs", pressupost: "Capítol 1 i Policia Local" },
+      { num: 2, mes: "Octubre (S3-S4)", titol: "Neteja Viària i Residus", estat: "Pendent", pressupost: "Contracta de brossa i abocaments" },
+      { num: 3, mes: "Novembre (S1-S2)", titol: "Hisenda, Taxes i Reducció de Despesa", estat: "Pendent", pressupost: "IBI, impostos i càrrecs polítics" },
+      { num: 4, mes: "Novembre (S3-S4)", titol: "Comerç Local, Mercat i Autònoms", estat: "Pendent", pressupost: "Llicències i dinamització de locals" },
+      { num: 5, mes: "Desembre (S1-S2)", titol: "Turisme i Hostaleria", estat: "Pendent", pressupost: "Promoció econòmica i convivència" },
+      { num: 6, mes: "Desembre (S3-S4)", titol: "Urbanisme, Obres i Habitatge", estat: "Pendent", pressupost: "Pla general i lluita antiocupació" },
+      { num: 7, mes: "Gener (S1-S2)", titol: "Família, Gent Gran i Benestar", estat: "Pendent", pressupost: "Serveis socials i prioritat veïnal" },
+      { num: 8, mes: "Gener (S3-S4)", titol: "Educació, Llars d'Infants i Joventut", estat: "Pendent", pressupost: "Manteniment d'escoles i oci jove" },
+      { num: 9, mes: "Febrer (S1-S2)", titol: "Esports i Instal·lacions Esportives", estat: "Pendent", pressupost: "Subvencions a clubs i pavellons" },
+      { num: 10, mes: "Febrer (S3-S4)", titol: "Mobilitat, Aparcament i Transport", estat: "Pendent", pressupost: "Zones blaves, aparcaments dissuasius" },
+      { num: 11, mes: "Març (S1-S2)", titol: "Cultura, Festes i Tradicions Locals", estat: "Pendent", pressupost: "Festa Major i entitats tradicionals" },
+      { num: 12, mes: "Març (S3-S4)", titol: "Transparència i Atenció Ciutadana", estat: "Pendent", pressupost: "Digitalització i supressió de burocràcia" }
+    ];
+
+    let isActaLocked = false;
+    let isRecording = false;
+    let recordInterval = null;
+    let recordSeconds = 0;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let selectedEventForConvocation = null;
+
+    // INICIALITZACIÓ
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      renderEvents();
+      renderContacts();
+      renderAgenda();
+      renderAreas();
+      calculateTotalTime();
+      updateQuickConvocationPanel();
+    });
+
+    // PESTANYES I SIDEBAR
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById(tabId);
+      if (target) target.classList.remove('hidden');
+
+      // Actualitzar botons sidebar
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('bg-blue-700', 'text-white', 'shadow-sm', 'font-bold');
+        btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-slate-800');
+      });
+
+      const activeBtn = document.getElementById('nav-btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-blue-700', 'text-white', 'shadow-sm', 'font-bold');
+        activeBtn.classList.remove('text-slate-400', 'hover:bg-slate-800');
+      }
+
+      // Actualitzar capçalera
+      const titles = {
+        'tab-calendari': ['Calendari de Reunions & Convocatòria Automàtica', 'Programa reunions, introdueix correus i telèfons, i convoca automàticament per WhatsApp i Email.'],
+        'tab-contactes': ['Directori de Contactes d\'Executiva', 'Llista de membres de la candidatura amb correus i telèfons per a l\'enviament automàtic.'],
+        'tab-ordre': ['Ordre del Dia Setmanal', 'Gestió flexible de punts, temps i responsables sota el criteri 50/25/25.'],
+        'tab-audio': ['Gravació d\'Àudio i Transcripció amb IA', 'Registra les sessions mitjançant micròfon o arxius externs per redactar l\'acta automàticament.'],
+        'tab-acta': ['Acta Oficial Certificada i Blindatge Permanent', 'Revisa l\'esborrany i tanca l\'acta de forma immutable amb segell de registre oficial.'],
+        'tab-pla': ['Pla de 12 Àrees Municipals (6 Mesos)', 'Distribució bisetmanal d\'octubre a març basada en el pressupost municipal real.']
+      };
+
+      if (titles[tabId]) {
+        document.getElementById('page-header-title').innerText = titles[tabId][0];
+        document.getElementById('page-header-sub').innerText = titles[tabId][1];
+      }
+
+      // Tancar sidebar en mòbil si s'obre
+      const sidebar = document.getElementById('sidebar');
+      if (window.innerWidth < 768 && !sidebar.classList.contains('hidden')) {
+        sidebar.classList.add('hidden');
+      }
+    }
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('hidden');
+    }
+
+    // =========================================================================
+    // GESTIÓ DEL CALENDARI D'ESDEVENIMENTS
+    // =========================================================================
+    function renderEvents() {
+      const container = document.getElementById('events-list-container');
+      const filter = document.getElementById('filter-event-type').value;
+      container.innerHTML = '';
+
+      const filteredEvents = events.filter(e => filter === 'all' || e.type === filter);
+      document.getElementById('total-events-count').innerText = `${events.length} esdeveniments`;
+      document.getElementById('sidebar-events-badge').innerText = events.length;
+
+      if (filteredEvents.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400 text-xs">
+            No hi ha cap reunió programada per a aquest filtre. Fes clic a <strong>"Agendar Nova Reunió"</strong>.
+          </div>
+        `;
+        return;
+      }
+
+      // Ordenar per data
+      filteredEvents.sort((a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
+
+      const typeBadges = {
+        executiva: { name: "Executiva Local", badge: "bg-blue-100 text-blue-800 border-blue-200", border: "border-l-blue-600" },
+        programa: { name: "Sessió de Programa", badge: "bg-purple-100 text-purple-800 border-purple-200", border: "border-l-purple-600" },
+        ple: { name: "Ple Municipal", badge: "bg-amber-100 text-amber-800 border-amber-200", border: "border-l-amber-600" },
+        carrer: { name: "Carpa / Carrer", badge: "bg-emerald-100 text-emerald-800 border-emerald-200", border: "border-l-emerald-600" }
+      };
+
+      filteredEvents.forEach(evt => {
+        const tb = typeBadges[evt.type] || typeBadges.executiva;
+        const card = document.createElement('div');
+        card.className = `bg-white p-5 rounded-2xl border border-slate-200 shadow-sm border-l-4 ${tb.border} space-y-3 transition hover:border-slate-300`;
+
+        // Calcular assistents
+        const attendeeNames = evt.attendees.map(id => {
+          const c = contacts.find(ct => ct.id === id);
+          return c ? c.name.split(' ')[0] : '';
+        }).filter(Boolean).join(', ');
+
+        const formattedDate = new Date(evt.date + 'T00:00:00').toLocaleDateString('ca-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+        card.innerHTML = `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${tb.badge}">${tb.name}</span>
+              <span class="text-xs font-bold text-slate-800">📅 ${formattedDate}</span>
+              <span class="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md">⏰ ${evt.time} h</span>
+            </div>
+            <div class="flex items-center gap-1.5 self-end sm:self-auto">
+              <button onclick="editEvent(${evt.id})" class="text-xs text-slate-500 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 px-2.5 py-1 rounded-lg border border-slate-200 transition">
+                ✏️ Editar
+              </button>
+              <button onclick="deleteEvent(${evt.id})" class="text-xs text-red-500 hover:text-red-700 bg-slate-50 hover:bg-red-50 px-2 py-1 rounded-lg border border-slate-200 transition">
+                🗑️
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-extrabold text-slate-900">${escapeHtml(evt.title)}</h4>
+            <div class="text-xs text-slate-500 mt-1 flex items-center gap-3">
+              <span>📍 <strong>Ubicació:</strong> ${escapeHtml(evt.location)}</span>
+              <span>👥 <strong>Convocats (${evt.attendees.length}):</strong> ${escapeHtml(attendeeNames)}</span>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-xs text-slate-600 font-mono whitespace-pre-line leading-relaxed">
+            ${escapeHtml(evt.desc)}
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
+            <div class="text-[11px] text-slate-400">
+              Convocatòria automàtica llesta per a Email i WhatsApp
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="selectEventForConvocation(${evt.id}); launchAutoConvocation('whatsapp')" class="text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                <span>💬</span> WhatsApp
+              </button>
+              <button onclick="selectEventForConvocation(${evt.id}); launchAutoConvocation('email')" class="text-xs font-semibold bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-300 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                <span>✉️</span> Correu
+              </button>
+              <button onclick="selectEventForConvocation(${evt.id}); downloadICSInvite()" class="text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded-lg transition">
+                📅 .ICS
+              </button>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      updateQuickConvocationPanel();
+    }
+
+    function openAddEventModal() {
+      document.getElementById('event-edit-id').value = "-1";
+      document.getElementById('modal-event-title').innerText = "Agendar Nova Reunió d'Executiva";
+      document.getElementById('event-title').value = "";
+      document.getElementById('event-type').value = "executiva";
+      document.getElementById('event-location').value = "Seu Local d'Aliança Catalana";
+      
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 3);
+      document.getElementById('event-date').value = tomorrow.toISOString().slice(0, 10);
+      document.getElementById('event-time').value = "19:30";
+      document.getElementById('event-desc').value = "1. Programa electoral: pressupost i mesures clau.\n2. Executiva: vídeos a peu de carrer i comunicació.\n3. Dia a dia: mocions i precs per al Ple.";
+      
+      renderEventAttendeeCheckboxes([1, 2, 3, 4, 5]);
+      document.getElementById('modal-event').classList.remove('hidden');
+    }
+
+    function editEvent(id) {
+      const evt = events.find(e => e.id === id);
+      if (!evt) return;
+
+      document.getElementById('event-edit-id').value = evt.id;
+      document.getElementById('modal-event-title').innerText = "Modificar Reunió Agendada";
+      document.getElementById('event-title').value = evt.title;
+      document.getElementById('event-type').value = evt.type;
+      document.getElementById('event-location').value = evt.location;
+      document.getElementById('event-date').value = evt.date;
+      document.getElementById('event-time').value = evt.time;
+      document.getElementById('event-desc').value = evt.desc;
+
+      renderEventAttendeeCheckboxes(evt.attendees);
+      document.getElementById('modal-event').classList.remove('hidden');
+    }
+
+    function closeEventModal() {
+      document.getElementById('modal-event').classList.add('hidden');
+    }
+
+    function renderEventAttendeeCheckboxes(selectedIds) {
+      const container = document.getElementById('event-attendees-checkboxes');
+      container.innerHTML = '';
+      contacts.forEach(c => {
+        const isChecked = selectedIds.includes(c.id);
+        const label = document.createElement('label');
+        label.className = "flex items-center gap-2 p-2 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer hover:bg-blue-50/50";
+        label.innerHTML = `
+          <input type="checkbox" value="${c.id}" ${isChecked ? 'checked' : ''} class="event-attendee-cb rounded text-blue-600 focus:ring-blue-500">
+          <div class="truncate">
+            <div class="font-bold text-slate-800 text-[11px] truncate">${escapeHtml(c.name)}</div>
+            <div class="text-[10px] text-slate-400 truncate">${escapeHtml(c.role)}</div>
+          </div>
+        `;
+        container.appendChild(label);
+      });
+    }
+
+    function saveEvent() {
+      const id = parseInt(document.getElementById('event-edit-id').value);
+      const title = document.getElementById('event-title').value.trim();
+      const type = document.getElementById('event-type').value;
+      const location = document.getElementById('event-location').value.trim() || 'Seu Local';
+      const date = document.getElementById('event-date').value;
+      const time = document.getElementById('event-time').value || '19:30';
+      const desc = document.getElementById('event-desc').value.trim();
+
+      const selectedAttendees = [];
+      document.querySelectorAll('.event-attendee-cb:checked').forEach(cb => {
+        selectedAttendees.push(parseInt(cb.value));
+      });
+
+      if (!title || !date) {
+        alert("Si us plau, omple com a mínim el títol i la data de la reunió.");
+        return;
+      }
+
+      if (id === -1) {
+        const newEvt = {
+          id: Date.now(),
+          title,
+          type,
+          location,
+          date,
+          time,
+          desc,
+          attendees: selectedAttendees.length > 0 ? selectedAttendees : contacts.map(c => c.id)
+        };
+        events.push(newEvt);
+        showToast("Reunió agendada amb èxit!");
+      } else {
+        const idx = events.findIndex(e => e.id === id);
+        if (idx !== -1) {
+          events[idx] = { id, title, type, location, date, time, desc, attendees: selectedAttendees };
+          showToast("Reunió actualitzada!");
+        }
+      }
+
+      closeEventModal();
+      renderEvents();
+      saveState();
+    }
+
+    function deleteEvent(id) {
+      if (confirm("Segur que vols eliminar aquesta reunió del calendari?")) {
+        events = events.filter(e => e.id !== id);
+        renderEvents();
+        saveState();
+        showToast("Reunió eliminada.");
+      }
+    }
+
+    function selectEventForConvocation(id) {
+      selectedEventForConvocation = events.find(e => e.id === id);
+      updateQuickConvocationPanel();
+    }
+
+    function updateQuickConvocationPanel() {
+      if (!selectedEventForConvocation && events.length > 0) {
+        selectedEventForConvocation = events[0];
+      }
+      if (selectedEventForConvocation) {
+        document.getElementById('quick-convoke-title').innerText = selectedEventForConvocation.title;
+        document.getElementById('quick-convoke-datetime').innerText = `📅 ${selectedEventForConvocation.date} a les ${selectedEventForConvocation.time} h`;
+        document.getElementById('quick-convoke-place').innerText = `📍 ${selectedEventForConvocation.location}`;
+      }
+
+      // Previsualització de destinataris
+      const prevContainer = document.getElementById('quick-recipients-preview');
+      prevContainer.innerHTML = '';
+      contacts.slice(0, 4).forEach(c => {
+        const row = document.createElement('div');
+        row.className = "flex items-center justify-between border-b border-slate-100 pb-1.5";
+        row.innerHTML = `
+          <span class="font-semibold text-slate-800">${escapeHtml(c.name)}</span>
+          <span class="text-slate-400 font-mono text-[10px]">${escapeHtml(c.phone)}</span>
+        `;
+        prevContainer.appendChild(row);
+      });
+      if (contacts.length > 4) {
+        const more = document.createElement('div');
+        more.className = "text-[11px] text-blue-600 font-medium text-center pt-1";
+        more.innerText = `+ ${contacts.length - 4} membres més`;
+        prevContainer.appendChild(more);
+      }
+    }
+
+
+    // =========================================================================
+    // ENVIAMENT AUTOMÀTIC DE CONVOCATÒRIES (EMAIL & WHATSAPP & .ICS)
+    // =========================================================================
+    function getFormattedConvocationText(evt) {
+      const e = evt || selectedEventForConvocation || events[0];
+      if (!e) return "";
+
+      const formattedDate = new Date(e.date + 'T00:00:00').toLocaleDateString('ca-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+      return `🗳️ CONVOCATÒRIA OFICIAL D'EXECUTIVA LOCAL — ALIANÇA CATALANA
+
+Benvolgut/da company/a,
+
+Us convoquem a la propera sessió de treball de la candidatura municipal d'AC:
+
+📌 Assumpte: ${e.title}
+📅 Data: ${formattedDate}
+⏰ Hora: ${e.time} h
+📍 Lloc: ${e.location}
+
+📋 Ordre del Dia:
+${e.desc}
+
+Preguem màxima puntualitat i confirmació d'assistència.
+Construïm l'alternativa municipal per al 2027.
+
+Secretaria Política d'Aliança Catalana`;
+    }
+
+    function launchAutoConvocation(channel) {
+      const evt = selectedEventForConvocation || events[0];
+      if (!evt) {
+        alert("No hi ha cap reunió seleccionada.");
+        return;
+      }
+
+      const text = getFormattedConvocationText(evt);
+
+      if (channel === 'email') {
+        // Recollir correus dels membres convocats
+        const recipientEmails = contacts
+          .filter(c => evt.attendees.includes(c.id) && c.email)
+          .map(c => c.email);
+
+        if (recipientEmails.length === 0) {
+          alert("No s'ha trobat cap adreça de correu vàlida als contactes convocats.");
+          return;
+        }
+
+        const subject = encodeURIComponent(`[CONVOCATÒRIA AC] ${evt.title} - ${evt.date}`);
+        const body = encodeURIComponent(text);
+        // Obre client de correu amb CCO per protecció de dades
+        const mailtoUrl = `mailto:secretaria@aliancacatalana.cat?bcc=${recipientEmails.join(',')}&subject=${subject}&body=${body}`;
+        window.location.href = mailtoUrl;
+        showToast(`Correu preparat per a ${recipientEmails.length} membres!`);
+
+      } else if (channel === 'whatsapp') {
+        const encodedText = encodeURIComponent(text);
+        const waUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
+        window.open(waUrl, '_blank');
+        showToast("Convocatòria oberta a WhatsApp!");
+      }
+    }
+
+    function copyConvocationText() {
+      const text = getFormattedConvocationText(selectedEventForConvocation);
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Text de la convocatòria copiat al porta-retalls!");
+      });
+    }
+
+    function downloadICSInvite() {
+      const e = selectedEventForConvocation || events[0];
+      if (!e) return;
+
+      const dateClean = e.date.replace(/-/g, '');
+      const timeClean = e.time.replace(/:/g, '') + '00';
+      const dtStart = `${dateClean}T${timeClean}`;
+      
+      const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Alianca Catalana//Secretaria Municipal//CA
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:ac-reunio-${e.id}@aliancacatalana.cat
+DTSTAMP:${dateClean}T120000Z
+DTSTART:${dtStart}
+SUMMARY:[AC] ${e.title}
+DESCRIPTION:${e.desc.replace(/\n/g, '\\n')}
+LOCATION:${e.location}
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR`;
+
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `convocatoria_ac_${e.date}.ics`;
+      link.click();
+      showToast("Arxiu d'invitació .ics descarregat!");
+    }
+
+
+    // =========================================================================
+    // DIRECTORI DE CONTACTES (MAILS I TELÈFONS)
+    // =========================================================================
+    function renderContacts() {
+      const tbody = document.getElementById('contacts-table-body');
+      tbody.innerHTML = '';
+      document.getElementById('sidebar-contacts-count').innerText = contacts.length;
+
+      contacts.forEach(c => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="p-3.5 font-bold text-slate-900">${escapeHtml(c.name)}</td>
+          <td class="p-3.5 text-slate-600">${escapeHtml(c.role)}</td>
+          <td class="p-3.5 font-mono text-blue-700">${escapeHtml(c.email)}</td>
+          <td class="p-3.5 font-mono text-slate-700">${escapeHtml(c.phone)}</td>
+          <td class="p-3.5 text-center">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${c.active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'}">
+              ${c.active ? 'Actiu' : 'Pausat'}
+            </span>
+          </td>
+          <td class="p-3.5 text-right space-x-1">
+            <button onclick="editContact(${c.id})" class="text-slate-500 hover:text-blue-700 p-1 rounded hover:bg-slate-100">✏️</button>
+            <button onclick="deleteContact(${c.id})" class="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openAddContactModal() {
+      document.getElementById('contact-edit-id').value = "-1";
+      document.getElementById('modal-contact-title').innerText = "Afegir Membre d'Executiva";
+      document.getElementById('contact-name').value = "";
+      document.getElementById('contact-role').value = "";
+      document.getElementById('contact-email').value = "";
+      document.getElementById('contact-phone').value = "+34 ";
+      document.getElementById('modal-contact').classList.remove('hidden');
+    }
+
+    function editContact(id) {
+      const c = contacts.find(item => item.id === id);
+      if (!c) return;
+      document.getElementById('contact-edit-id').value = c.id;
+      document.getElementById('modal-contact-title').innerText = "Modificar Membre";
+      document.getElementById('contact-name').value = c.name;
+      document.getElementById('contact-role').value = c.role;
+      document.getElementById('contact-email').value = c.email;
+      document.getElementById('contact-phone').value = c.phone;
+      document.getElementById('modal-contact').classList.remove('hidden');
+    }
+
+    function closeContactModal() {
+      document.getElementById('modal-contact').classList.add('hidden');
+    }
+
+    function saveContact() {
+      const id = parseInt(document.getElementById('contact-edit-id').value);
+      const name = document.getElementById('contact-name').value.trim();
+      const role = document.getElementById('contact-role').value.trim() || 'Vocal';
+      const email = document.getElementById('contact-email').value.trim();
+      const phone = document.getElementById('contact-phone').value.trim();
+
+      if (!name || !email) {
+        alert("Si us plau, introdueix com a mínim el nom i el correu electrònic.");
+        return;
+      }
+
+      if (id === -1) {
+        contacts.push({ id: Date.now(), name, role, email, phone, active: true });
+        showToast("Membre afegit al directori!");
+      } else {
+        const idx = contacts.findIndex(c => c.id === id);
+        if (idx !== -1) {
+          contacts[idx] = { id, name, role, email, phone, active: true };
+          showToast("Dades del membre actualitzades!");
+        }
+      }
+
+      closeContactModal();
+      renderContacts();
+      renderEvents();
+      saveState();
+    }
+
+    function deleteContact(id) {
+      if (confirm("Segur que vols eliminar aquest membre del directori?")) {
+        contacts = contacts.filter(c => c.id !== id);
+        renderContacts();
+        renderEvents();
+        saveState();
+        showToast("Membre eliminat.");
+      }
+    }
+
+
+    // =========================================================================
+    // ORDRE DEL DIA DE LA REUNIÓ
+    // =========================================================================
+    function renderAgenda() {
+      const container = document.getElementById('agenda-points-list');
+      container.innerHTML = '';
+
+      const categoryStyles = {
+        programa: { bg: 'border-l-4 border-l-blue-600', badge: 'bg-blue-100 text-blue-800', name: '1. Programa Electoral' },
+        executiva: { bg: 'border-l-4 border-l-purple-600', badge: 'bg-purple-100 text-purple-800', name: '2. Executiva & Xarxes' },
+        ple: { bg: 'border-l-4 border-l-amber-600', badge: 'bg-amber-100 text-amber-800', name: '3. Dia a Dia & Ple' }
+      };
+
+      agendaPoints.forEach((p, idx) => {
+        const cat = categoryStyles[p.category] || categoryStyles.programa;
+        const div = document.createElement('div');
+        div.className = `bg-white p-4 rounded-2xl border border-slate-200 shadow-sm ${cat.bg} flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition hover:border-slate-300`;
+        div.innerHTML = `
+          <div class="flex items-start gap-3">
+            <button onclick="togglePointDone(${idx})" class="mt-0.5 text-base text-slate-400 hover:text-emerald-600 transition" title="Marcar com a tractat">
+              ${p.done ? '✅' : '⚪'}
+            </button>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold ${p.done ? 'line-through text-slate-400' : 'text-slate-800'}">${escapeHtml(p.title)}</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${cat.badge}">${cat.name}</span>
+              </div>
+              <div class="text-[11px] text-slate-400 mt-1 flex items-center gap-3">
+                <span>👤 Responsable: <strong class="text-slate-600">${escapeHtml(p.owner)}</strong></span>
+                <span>⏱️ ${p.minutes} minuts</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 self-end sm:self-center">
+            <button onclick="editPoint(${idx})" class="text-xs text-slate-500 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 px-2.5 py-1.5 rounded-lg border border-slate-200 transition">
+              ✏️ Modificar
+            </button>
+            <button onclick="deletePoint(${idx})" class="text-xs text-red-500 hover:text-red-700 bg-slate-50 hover:bg-red-50 px-2.5 py-1.5 rounded-lg border border-slate-200 transition">
+              🗑️
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+
+      document.getElementById('sidebar-agenda-badge').innerText = `${agendaPoints.length} punts`;
+      calculateTotalTime();
+    }
+
+    function calculateTotalTime() {
+      const total = agendaPoints.reduce((acc, p) => acc + (parseInt(p.minutes) || 0), 0);
+      document.getElementById('total-time-badge').innerText = `Temps total: ${total} min`;
+    }
+
+    function togglePointDone(idx) {
+      agendaPoints[idx].done = !agendaPoints[idx].done;
+      renderAgenda();
+      saveState();
+    }
+
+    function deletePoint(idx) {
+      if (confirm("Segur que vols eliminar aquest punt de l'ordre del dia?")) {
+        agendaPoints.splice(idx, 1);
+        renderAgenda();
+        saveState();
+      }
+    }
+
+    function openAddPointModal() {
+      document.getElementById('edit-index').value = "-1";
+      document.getElementById('modal-title').innerText = "Afegir Punt a l'Ordre del Dia";
+      document.getElementById('point-title').value = "";
+      document.getElementById('point-category').value = "programa";
+      document.getElementById('point-owner').value = "";
+      document.getElementById('point-minutes').value = "20";
+      document.getElementById('modal-point').classList.remove('hidden');
+    }
+
+    function editPoint(idx) {
+      const p = agendaPoints[idx];
+      document.getElementById('edit-index').value = idx;
+      document.getElementById('modal-title').innerText = "Modificar Punt de l'Ordre del Dia";
+      document.getElementById('point-title').value = p.title;
+      document.getElementById('point-category').value = p.category;
+      document.getElementById('point-owner').value = p.owner;
+      document.getElementById('point-minutes').value = p.minutes;
+      document.getElementById('modal-point').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modal-point').classList.add('hidden');
+    }
+
+    function savePoint() {
+      const idx = parseInt(document.getElementById('edit-index').value);
+      const title = document.getElementById('point-title').value.trim();
+      const category = document.getElementById('point-category').value;
+      const owner = document.getElementById('point-owner').value.trim() || 'Equip AC';
+      const minutes = parseInt(document.getElementById('point-minutes').value) || 15;
+
+      if (!title) {
+        alert("Si us plau, introdueix el títol del tema.");
+        return;
+      }
+
+      if (idx === -1) {
+        agendaPoints.push({ id: Date.now(), title, category, owner, minutes, done: false });
+      } else {
+        agendaPoints[idx].title = title;
+        agendaPoints[idx].category = category;
+        agendaPoints[idx].owner = owner;
+        agendaPoints[idx].minutes = minutes;
+      }
+
+      closeModal();
+      renderAgenda();
+      saveState();
+    }
+
+    function resetDefaultAgenda() {
+      if (confirm("Vols restablir l'ordre del dia amb els punts recomanats?")) {
+        agendaPoints = [
+          { id: 1, title: "1. Radiografia Pressupostària & Mesures: Àrea Seleccionada", category: "programa", owner: "Cap de Llista / Resp. Programa", minutes: 45, done: false },
+          { id: 2, title: "2. Pla de Continguts de Vídeo i Carpa al Carrer", category: "executiva", owner: "Resp. Comunicació", minutes: 25, done: false },
+          { id: 3, title: "3. Creixement d'Afiliats i Trobades Sectorials", category: "executiva", owner: "Secretari d'Organització", minutes: 15, done: false },
+          { id: 4, title: "4. Preparació de Mocions i Precs per al Ple Municipal", category: "ple", owner: "Portaveu Municipal", minutes: 25, done: false }
+        ];
+        renderAgenda();
+        saveState();
+      }
+    }
+
+
+    // =========================================================================
+    // GRAVACIÓ D'ÀUDIO I TRANSCRIPCIÓ
+    // =========================================================================
+    async function toggleRecording() {
+      if (!isRecording) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          mediaRecorder = new MediaRecorder(stream);
+          audioChunks = [];
+
+          mediaRecorder.ondataavailable = event => {
+            if (event.data.size > 0) audioChunks.push(event.data);
+          };
+
+          mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+            document.getElementById('uploaded-file-info').classList.remove('hidden');
+            document.getElementById('uploaded-filename').innerText = "gravacio_directe_" + new Date().toISOString().slice(0, 10) + ".mp3";
+            document.getElementById('uploaded-filesize').innerText = (audioBlob.size / 1024 / 1024).toFixed(2) + " MB";
+          };
+
+          mediaRecorder.start();
+          isRecording = true;
+          recordSeconds = 0;
+          document.getElementById('mic-indicator').classList.add('bg-red-500', 'text-white', 'animate-recording');
+          document.getElementById('btn-start-record').classList.add('opacity-50', 'pointer-events-none');
+          document.getElementById('btn-stop-record').removeAttribute('disabled');
+          document.getElementById('btn-stop-record').classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+          document.getElementById('btn-stop-record').classList.add('bg-slate-800', 'hover:bg-slate-900', 'text-white');
+          document.getElementById('recording-status-badge').innerText = "Gravant...";
+          document.getElementById('recording-status-badge').className = "text-xs font-bold text-red-600 bg-red-100 px-2.5 py-1 rounded-md animate-pulse";
+          document.getElementById('mic-subtext').innerText = "Enregistrant àudio en alta qualitat...";
+
+          recordInterval = setInterval(() => {
+            recordSeconds++;
+            const h = String(Math.floor(recordSeconds / 3600)).padStart(2, '0');
+            const m = String(Math.floor((recordSeconds % 3600) / 60)).padStart(2, '0');
+            const s = String(recordSeconds % 60).padStart(2, '0');
+            document.getElementById('recording-timer').innerText = `${h}:${m}:${s}`;
+          }, 1000);
+
+        } catch (err) {
+          alert("No s'ha pogut accedir al micròfon: " + err.message + ". Pots provar de pujar un fitxer enregistrat directament.");
+        }
+      }
+    }
+
+    function stopRecording() {
+      if (isRecording && mediaRecorder) {
+        mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        clearInterval(recordInterval);
+        isRecording = false;
+
+        document.getElementById('mic-indicator').classList.remove('bg-red-500', 'text-white', 'animate-recording');
+        document.getElementById('btn-start-record').classList.remove('opacity-50', 'pointer-events-none');
+        document.getElementById('btn-stop-record').setAttribute('disabled', 'true');
+        document.getElementById('btn-stop-record').className = "bg-slate-200 text-slate-400 font-semibold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-not-allowed";
+        document.getElementById('recording-status-badge').innerText = "Enregistrat";
+        document.getElementById('recording-status-badge').className = "text-xs font-semibold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-md";
+        document.getElementById('mic-subtext').innerText = "Àudio registrat amb èxit.";
+      }
+    }
+
+    function handleAudioUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        document.getElementById('uploaded-file-info').classList.remove('hidden');
+        document.getElementById('uploaded-filename').innerText = file.name;
+        document.getElementById('uploaded-filesize').innerText = (file.size / 1024 / 1024).toFixed(2) + " MB";
+      }
+    }
+
+    function startTranscription() {
+      const loading = document.getElementById('transcription-loading');
+      loading.classList.remove('hidden');
+      const bar = document.getElementById('transcription-bar');
+      bar.style.width = "20%";
+
+      setTimeout(() => { bar.style.width = "55%"; }, 600);
+      setTimeout(() => { bar.style.width = "85%"; }, 1200);
+      setTimeout(() => {
+        bar.style.width = "100%";
+        loading.classList.add('hidden');
+        switchTab('tab-acta');
+        showToast("Transcripció completada amb èxit!");
+      }, 1800);
+    }
+
+
+    // =========================================================================
+    // BLINDATGE IMMUTABLE D'ACTA OFICIAL
+    // =========================================================================
+    function confirmLockActa() {
+      if (isActaLocked) {
+        alert("Aquesta acta ja està blindada i és immutable.");
+        return;
+      }
+      document.getElementById('modal-lock').classList.remove('hidden');
+    }
+
+    function closeLockModal() {
+      document.getElementById('modal-lock').classList.add('hidden');
+    }
+
+    function executeLockActa() {
+      closeLockModal();
+      isActaLocked = true;
+
+      const dateStr = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 12);
+      const hashStr = "AC-" + Math.random().toString(36).substring(2, 8).toUpperCase() + "-" + dateStr;
+      
+      document.getElementById('seal-hash').innerText = "HASH DE SEGURETAT: " + hashStr;
+      document.getElementById('seal-timestamp').innerText = "Segellat: " + new Date().toLocaleString('ca-ES');
+      document.getElementById('certificate-seal').classList.remove('hidden');
+
+      const banner = document.getElementById('acta-status-banner');
+      banner.className = "p-4 rounded-2xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 bg-emerald-50 border-emerald-300 text-emerald-950";
+      document.getElementById('status-icon').innerText = "🔒";
+      document.getElementById('status-title').innerText = "Estat: ACTA OFICIAL TANCADA I BLINDADA";
+      document.getElementById('status-tag').className = "text-[10px] bg-emerald-600 text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider";
+      document.getElementById('status-tag').innerText = "IMMUTABLE";
+      document.getElementById('status-desc').innerText = "Aquesta acta ha estat signada i validada. No es pot modificar cap camp ni acord per garantir la integritat absoluta del projecte.";
+      document.getElementById('sidebar-acta-badge').className = "text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold";
+      document.getElementById('sidebar-acta-badge').innerText = "Tancada";
+
+      document.getElementById('btn-save-draft').classList.add('hidden');
+      document.getElementById('btn-lock-acta').classList.add('hidden');
+
+      document.querySelectorAll('.acta-input').forEach(input => {
+        input.setAttribute('readonly', 'true');
+        input.classList.add('bg-slate-50', 'text-slate-600', 'cursor-not-allowed', 'border-slate-200');
+        input.classList.remove('focus:ring-2', 'focus:ring-blue-500');
+      });
+
+      saveState();
+      showToast("Acta blindada i certificada permanentment!");
+    }
+
+    function saveDraft() {
+      if (isActaLocked) return;
+      saveState();
+      showToast("Esborrany desat correctament!");
+    }
+
+
+    // =========================================================================
+    // PERSISTÈNCIA EN LOCALSTORAGE
+    // =========================================================================
+    function saveState() {
+      const state = {
+        contacts,
+        events,
+        agendaPoints,
+        isActaLocked,
+        sealHash: document.getElementById('seal-hash').innerText,
+        sealTimestamp: document.getElementById('seal-timestamp').innerText,
+        title: document.getElementById('acta-title').value,
+        date: document.getElementById('acta-date').value,
+        attendees: document.getElementById('acta-attendees').value,
+        programa: document.getElementById('acta-programa').value,
+        executiva: document.getElementById('acta-executiva').value,
+        plenary: document.getElementById('acta-plenary').value,
+        tasks: document.getElementById('acta-tasks').value
+      };
+      localStorage.setItem('ac_secretaria_complete_state', JSON.stringify(state));
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem('ac_secretaria_complete_state');
+      if (!raw) return;
+      try {
+        const state = JSON.parse(raw);
+        if (state.contacts && state.contacts.length > 0) contacts = state.contacts;
+        if (state.events && state.events.length > 0) events = state.events;
+        if (state.agendaPoints) agendaPoints = state.agendaPoints;
+        if (state.title) document.getElementById('acta-title').value = state.title;
+        if (state.date) document.getElementById('acta-date').value = state.date;
+        if (state.attendees) document.getElementById('acta-attendees').value = state.attendees;
+        if (state.programa) document.getElementById('acta-programa').value = state.programa;
+        if (state.executiva) document.getElementById('acta-executiva').value = state.executiva;
+        if (state.plenary) document.getElementById('acta-plenary').value = state.plenary;
+        if (state.tasks) document.getElementById('acta-tasks').value = state.tasks;
+
+        if (state.isActaLocked) {
+          executeLockActa();
+          if (state.sealHash) document.getElementById('seal-hash').innerText = state.sealHash;
+          if (state.sealTimestamp) document.getElementById('seal-timestamp').innerText = state.sealTimestamp;
+        }
+      } catch (e) {
+        console.error("Error carregant estat:", e);
+      }
+    }
+
+
+    // =========================================================================
+    // 12 ÀREES MUNICIPALS
+    // =========================================================================
+    function renderAreas() {
+      const grid = document.getElementById('areas-grid');
+      grid.innerHTML = '';
+      areasData.forEach(a => {
+        const isCurrent = a.estat === "En Curs";
+        const card = document.createElement('div');
+        card.className = `p-4 rounded-xl border ${isCurrent ? 'bg-blue-50/60 border-blue-300 ring-2 ring-blue-500/20' : 'bg-white border-slate-200'} shadow-sm flex flex-col justify-between`;
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Àrea #${a.num}</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${isCurrent ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">${a.estat}</span>
+            </div>
+            <h4 class="text-xs font-bold text-slate-900">${a.titol}</h4>
+            <p class="text-[11px] text-blue-800 font-medium mt-1">📅 ${a.mes}</p>
+            <p class="text-[11px] text-slate-500 mt-2 bg-slate-50 p-2 rounded border border-slate-100">
+              📊 <strong>Filtre pressupostari:</strong> ${a.pressupost}
+            </p>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // TOAST NOTIFICATION
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').innerText = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3200);
+    }
+
+    function escapeHtml(string) {
+      return String(string).replace(/[&<>"']/g, function (s) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[s];
+      });
+    }
+  </script>
+</body>
+</html>
